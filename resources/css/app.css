@@ -1,11 +1,22 @@
-
 @import 'tailwindcss';
 
 /* Tailwind CSS configuration */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
-/* General page styling */
+/* Thema: blauw en wit */
+:root {
+    --blauw: #1d4ed8;
+    --blauw-donker: #1e3a8a;
+    --blauw-hover: #1e40af;
+    --blauw-licht: #eff6ff;
+    --blauw-rand: #bfdbfe;
+    --tekst: #0f172a;
+    --tekst-zacht: #475569;
+    --wit: #ffffff;
+    --fout: #b00020;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -16,9 +27,12 @@ html {
 
 body {
     margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    color: #1c2024;
-    background: #f4f3ef;
+    color: var(--tekst);
+    background: var(--blauw-licht);
 }
 
 a {
@@ -26,258 +40,211 @@ a {
     text-decoration: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-p,
-figure {
+h1, h2, h3, h4, p, figure {
     margin: 0;
 }
 
 p {
-    color: #4b5058;
+    color: var(--tekst-zacht);
     line-height: 1.6;
 }
 
-/* Main page container */
-.page {
-    width: 100%;
-    max-width: 1440px;
-    margin: 40px auto 56px;
-    padding: 32px clamp(16px, 4vw, 64px);
-    background: #ffffff;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--blauw);
+    outline-offset: 3px;
 }
 
-/* Header and footer */
-.full {
-    width: 100%;
-}
-
-.el-header,
-.el-footer {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.inlog {
-    margin-left: auto;
-    padding: 8px 16px;
-    border-radius: 7px;
-    background: #5b5bd6;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    transition: background 0.2s ease;
-}
-.el-header {
-    margin-bottom: 40px;
-}
-
-.company-name {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-nav {
-    display: flex;
-    align-items:center;
-    flex-wrap: wrap;
-    gap: 24px;
-}
-
-nav a {
-    color: #4b5058;
-    font-size: 14px;
-    transition: color 0.2s ease;
-}
-
-nav a:hover {
-    color: #5b5bd6;
-}
-
-/* Rows and columns */
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-bottom: 28px;
-}
-
-.row > * {
-    flex: 1 1 0;
-    min-width: 0;
-}
-
-/* Image placeholders */
-.images-row {
-    align-items: stretch;
-}
-
-.el-image {
-    height: 168px;
-    overflow: hidden;
+/* Knoppen */
+.btn,
+.login-button {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    border: 0;
     border-radius: 8px;
-}
-
-.imgph {
-    width: 100%;
-    height: 100%;
-    background: #e7e5df;
-    transition: background 0.2s ease;
-}
-
-.imgph:hover {
-    background: #d8d5cd;
-}
-
-/* Text sections */
-.text-row {
-    align-items: flex-start;
-}
-
-.el-paragraph {
-    padding: 4px 0;
-}
-
-.el-paragraph h2 {
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.el-paragraph p {
-    font-size: 14px;
-}
-
-/* Buttons */
-.buttons-row {
-    align-items: stretch;
-}
-
-.el-button {
-    display: flex;
-    overflow: hidden;
-    border-radius: 7px;
-}
-
-button {
-    width: 100%;
-    min-height: 44px;
-    padding: 11px 20px;
-    border: none;
-    border-radius: 7px;
-    background: #5b5bd6;
-    color: #ffffff;
+    background: var(--blauw);
+    color: var(--wit);
     font: inherit;
-    font-size: 14px;
+    font-size: 0.9rem;
     font-weight: 600;
+    text-align: center;
     cursor: pointer;
     transition: background 0.2s ease;
 }
 
-button:hover {
-    background: #4646b8;
+.btn:hover,
+.login-button:hover {
+    background: var(--blauw-hover);
 }
 
-button:focus-visible,
-a:focus-visible {
-    outline: 2px solid #5b5bd6;
-    outline-offset: 3px;
+.btn-licht {
+    background: var(--wit);
+    color: var(--blauw);
 }
 
-/* Footer */
-.el-footer {
-    padding-top: 24px;
-    border-top: 1px solid #e3e0d8;
-    font-size: 13px;
+.btn-licht:hover {
+    background: var(--blauw-licht);
 }
 
-.el-footer p {
-    font-size: 13px;
+/* Navbar */
+.site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.9rem clamp(1rem, 4vw, 3rem);
+    background: var(--wit);
+    border-bottom: 3px solid var(--blauw);
 }
 
-/* Tablet */
-@media (max-width: 900px) {
-    .page {
-        margin-top: 20px;
-        padding: 24px;
-    }
-
-    .row {
-        gap: 20px;
-    }
-
-    .images-row > *,
-    .text-row > *,
-    .buttons-row > * {
-        flex: 1 1 calc(50% - 20px);
-    }
+.site-nav-links,
+.site-nav-account {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.75rem;
 }
 
-/* Mobile */
-@media (max-width: 600px) {
-    .page {
-        margin: 0;
-        padding: 20px 16px;
-        box-shadow: none;
-    }
-
-    .el-header {
-        align-items: flex-start;
-        flex-direction: column;
-        margin-bottom: 28px;
-    }
-
-    nav {
-        gap: 16px;
-    }
-
-    .row {
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-
-    .images-row > *,
-    .text-row > *,
-    .buttons-row > * {
-        flex: 1 1 100%;
-    }
-
-    .el-image {
-        height: 200px;
-    }
-
-    .el-footer {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 16px;
-    }
+.site-nav a,
+.site-nav-knop {
+    color: var(--tekst);
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
 }
 
-/* Login + beheer */
+.site-nav a:hover,
+.site-nav-knop:hover {
+    color: var(--blauw);
+}
+
+.site-nav-logo {
+    padding: 0.7rem 1.1rem;
+    border-radius: 8px;
+    background: var(--blauw);
+    color: var(--wit) !important;
+    font-weight: 700;
+}
+
+.site-nav-logo:hover {
+    background: var(--blauw-hover);
+}
+
+.site-nav-knop {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* Inhoud */
+.pagina {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem clamp(1rem, 4vw, 3rem);
+}
+
+.kaart {
+    padding: 2rem;
+    background: var(--wit);
+    border: 1px solid var(--blauw-rand);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(29, 78, 216, 0.08);
+}
+
+/* Home: hero */
+.hero {
+    margin-bottom: 2rem;
+    padding: clamp(2rem, 6vw, 4rem);
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--blauw), var(--blauw-donker));
+}
+
+.hero h1 {
+    margin-bottom: 0.75rem;
+    color: var(--wit);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.hero p {
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+    color: #dbeafe;
+}
+
+/* Home: lessen */
+.sectie-titel {
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: var(--blauw-donker);
+}
+
+.lessen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5rem;
+}
+
+.les-kaart {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--wit);
+    border: 1px solid var(--blauw-rand);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(29, 78, 216, 0.08);
+}
+
+.les-afbeelding {
+    height: 150px;
+    background: var(--blauw-rand);
+}
+
+.les-inhoud {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem;
+}
+
+.les-inhoud h3 {
+    color: var(--blauw-donker);
+    font-size: 1.15rem;
+}
+
+.les-inhoud p {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+/* Login */
 .login-container {
-    min-height: 100vh;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
 }
 
 .login-card {
     width: 100%;
-    max-width: 24rem;
+    max-width: 26rem;
     padding: 2rem;
-    background: #fff;
-    border: 1px solid #1c2024;
+    background: var(--wit);
+    border: 1px solid var(--blauw-rand);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(29, 78, 216, 0.08);
 }
 
 .login-title {
     margin: 0 0 1.5rem;
-    font-size: 1.5rem;
+    color: var(--blauw-donker);
+    font-size: 1.6rem;
 }
 
 .login-group {
@@ -286,42 +253,75 @@ a:focus-visible {
 
 .login-label {
     display: block;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.3rem;
+    color: var(--tekst-zacht);
     font-size: 0.875rem;
 }
 
 .login-input {
     width: 100%;
-    padding: 0.6rem;
-    border: 1px solid #1c2024;
-    background: #fff;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--blauw-rand);
+    border-radius: 8px;
+    background: var(--wit);
+    font: inherit;
 }
 
-.login-button {
-    padding: 0.6rem 1.25rem;
-    border: 1px solid #1c2024;
-    background: #bbb;
-    cursor: pointer;
+.login-input:focus {
+    border-color: var(--blauw);
 }
 
 .login-error {
     margin-bottom: 1rem;
     padding: 0.75rem;
-    border: 1px solid #b00020;
+    border: 1px solid var(--fout);
+    border-radius: 8px;
     background: #fdecea;
-    color: #b00020;
+    color: var(--fout);
     font-size: 0.875rem;
 }
 
-.beheer-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background: #fff;
-    border-bottom: 1px solid #1c2024;
+.terug-knop {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--blauw);
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
+.terug-knop:hover {
+    text-decoration: underline;
+}
+
+/* Beheer */
 .beheer-main {
-    padding: 2rem;
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem clamp(1rem, 4vw, 3rem);
+}
+
+.beheer-main h1 {
+    margin-bottom: 0.75rem;
+    color: var(--blauw-donker);
+}
+
+/* Footer */
+.site-footer {
+    padding: 1.5rem 1rem;
+    background: var(--blauw-donker);
+    text-align: center;
+}
+
+.site-footer p,
+.site-footer a {
+    display: block;
+    color: #dbeafe;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.site-footer a:hover {
+    color: var(--wit);
 }

@@ -7,8 +7,12 @@
     @vite(['resources/css/app.css'])
 </head>
 <body>
+    @include('partials.nav')
+
     <div class="login-container">
         <div class="login-card">
+
+            <a href="{{ url('/') }}" class="terug-knop">&larr; Terug</a>
 
             <h1 class="login-title">Inloggen</h1>
 
@@ -58,5 +62,6 @@
 
         </div>
     </div>
+    @include('partials.footer')
 </body>
 </html>

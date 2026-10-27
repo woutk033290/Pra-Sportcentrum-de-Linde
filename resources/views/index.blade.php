@@ -1,100 +1,64 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Company - Home</title>
-
+    <title>Sportschool De Linde</title>
     @vite(['resources/css/app.css'])
 </head>
 <body>
-    <section class="page">
+    @include('partials.nav')
 
-        <!-- Header -->
-        <header class="el-header full">
-            <strong class="company-name">Company</strong>
+    <main class="pagina">
 
-            <nav>
-                <a class="inlog" href="/login">Log in</a>
-            </nav>
-        </header>
+        <section class="hero">
+            <h1>Sportschool De Linde</h1>
+            <p>Groepslessen voor iedereen: van spinning en yoga tot bootcamp en aquagym.</p>
+            <a href="#lessen" class="btn btn-licht">Bekijk de lessen</a>
+        </section>
 
-        <!-- Images -->
-        <div class="row images-row" id="features">
-            <figure class="el-image">
-                <div class="imgph" role="img" aria-label="Image placeholder 1"></div>
-            </figure>
+        <h2 class="sectie-titel" id="lessen">Onze lessen</h2>
 
-            <figure class="el-image">
-                <div class="imgph" role="img" aria-label="Image placeholder 2"></div>
-            </figure>
+        <section class="lessen-grid">
+            <article class="les-kaart">
+                <div class="les-afbeelding" role="img" aria-label="Spinning"></div>
+                <div class="les-inhoud">
+                    <h3>Spinning</h3>
+                    <p>Intensieve fietsles voor volwassenen.</p>
+                    <a href="#" class="btn">Meer info</a>
+                </div>
+            </article>
 
-            <figure class="el-image">
-                <div class="imgph" role="img" aria-label="Image placeholder 3"></div>
-            </figure>
+            <article class="les-kaart">
+                <div class="les-afbeelding" role="img" aria-label="Yoga"></div>
+                <div class="les-inhoud">
+                    <h3>Yoga</h3>
+                    <p>Rustige stretch- en ademhalingsles voor iedereen.</p>
+                    <a href="#" class="btn">Meer info</a>
+                </div>
+            </article>
 
-            <figure class="el-image">
-                <div class="imgph" role="img" aria-label="Image placeholder 4"></div>
-            </figure>
-        </div>
+            <article class="les-kaart">
+                <div class="les-afbeelding" role="img" aria-label="Bootcamp"></div>
+                <div class="les-inhoud">
+                    <h3>Bootcamp</h3>
+                    <p>Krachttraining buiten voor gevorderden.</p>
+                    <a href="#" class="btn">Meer info</a>
+                </div>
+            </article>
 
-        <!-- Text -->
-        <div class="row text-row">
-            <div class="el-paragraph">
-                <h2>Feature One</h2>
-                <p>Body text goes here. Replace this with your own copy.</p>
-            </div>
+            <article class="les-kaart">
+                <div class="les-afbeelding" role="img" aria-label="Aquagym"></div>
+                <div class="les-inhoud">
+                    <h3>Aquagym</h3>
+                    <p>Bewegen in het water, geschikt voor beginners.</p>
+                    <a href="#" class="btn">Meer info</a>
+                </div>
+            </article>
+        </section>
 
-            <div class="el-paragraph">
-                <h2>Feature Two</h2>
-                <p>Body text goes here. Replace this with your own copy.</p>
-            </div>
+    </main>
 
-            <div class="el-paragraph">
-                <h2>Feature Three</h2>
-                <p>Body text goes here. Replace this with your own copy.</p>
-            </div>
-
-            <div class="el-paragraph">
-                <h2>Feature Four</h2>
-                <p>Body text goes here. Replace this with your own copy.</p>
-            </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="row buttons-row" id="pricing">
-            <div class="el-button">
-                <button type="button">Learn More</button>
-            </div>
-
-            <div class="el-button">
-                <button type="button">Learn More</button>
-            </div>
-
-            <div class="el-button">
-                <button type="button">Learn More</button>
-            </div>
-
-            <div class="el-button">
-                <button type="button">Learn More</button>
-            </div>
-        </div>
-
-
-
-        <!-- Footer -->
-        <footer class="el-footer full" id="contact">
-            <p>&copy; Company</p>
-
-            <nav>
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="#">Contact</a>
-            </nav>
-        </footer>
-
-    </section>
+    @include('partials.footer')
 </body>
 </html>
