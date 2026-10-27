@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Locatie extends Model
 {
     protected $table = 'locaties';
+    protected $guarded = [];
 }

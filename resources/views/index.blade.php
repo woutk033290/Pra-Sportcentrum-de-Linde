@@ -17,11 +17,7 @@
             <strong class="company-name">Company</strong>
 
             <nav>
-                <a href="#">Home</a>
-                <a href="#features">Features</a>
-                <a href="#pricing">Pricing</a>
-                <a href="#contact">Contact</a>
-                <a class="inlog" href="#inlog_page">log in</a>
+                <a class="inlog" href="/login">Log in</a>
             </nav>
         </header>
 

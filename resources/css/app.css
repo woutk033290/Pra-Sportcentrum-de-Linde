@@ -257,3 +257,71 @@ a:focus-visible {
         gap: 16px;
     }
 }
+
+/* Login + beheer */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 24rem;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid #1c2024;
+}
+
+.login-title {
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+}
+
+.login-group {
+    margin-bottom: 1rem;
+}
+
+.login-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.login-input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #1c2024;
+    background: #fff;
+}
+
+.login-button {
+    padding: 0.6rem 1.25rem;
+    border: 1px solid #1c2024;
+    background: #bbb;
+    cursor: pointer;
+}
+
+.login-error {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border: 1px solid #b00020;
+    background: #fdecea;
+    color: #b00020;
+    font-size: 0.875rem;
+}
+
+.beheer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: #fff;
+    border-bottom: 1px solid #1c2024;
+}
+
+.beheer-main {
+    padding: 2rem;
+}
