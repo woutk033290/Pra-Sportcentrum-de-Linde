@@ -7,19 +7,20 @@
         <a href="#">Yoga</a>
         <a href="#">bootcamp</a>
         <a href="#">aquagym</a>
-        <a href="#">rooster</a>
+        <a href="{{ route('rooster') }}" class="{{ request()->routeIs('rooster') ? 'nav-actief' : '' }}">rooster</a>
     </div>
 
-    <div class="site-nav-account">
-        @if (auth('beheer')->check())
-            <a href="{{ route('beheer.dashboard') }}">Beheer</a>
+<div class="site-nav-account">
+    @if (auth('beheer')->check())
+        <a href="{{ route('beheer.dashboard') }}">admin</a>
+        <span aria-hidden="true">&middot;</span>
 
-            <form method="POST" action="{{ route('beheer.uitloggen') }}">
-                @csrf
-                <button type="submit" class="site-nav-knop">Uitloggen</button>
-            </form>
-        @else
-            <a href="{{ route('login') }}">inlog</a>
-        @endif
-    </div>
+        <form method="POST" action="{{ route('beheer.uitloggen') }}">
+            @csrf
+            <button type="submit" class="site-nav-knop">uitloggen</button>
+        </form>
+    @else
+        <a href="{{ route('login') }}">inlog</a>
+    @endif
+</div>
 </header>

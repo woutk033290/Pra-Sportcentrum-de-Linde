@@ -11,7 +11,7 @@ class Groepsles extends Model
     protected $guarded = [];
     protected $casts = [
         'starttijd' => 'datetime',
-        'eindtijd'  => 'datetime',
+        'eindtijd' => 'datetime',
     ];
 
     public function lestype()
@@ -30,20 +30,37 @@ class Groepsles extends Model
     }
 
     /** Geeft een raster terug: $grid[dagdeel][dagIndex 0-6] = [lessen] */
-    public static function weekGrid(Carbon $start, ?int $lestypeId = null): array
+    public function reserveringen()
     {
-        $lessen = static::with('lestype')
-            ->where('status', 'gepland')
+        return $this->hasMany(Reservering::class, 'groepsles_id');
+    }
+
+    /** Geeft een raster terug: $grid[dagdeel][dagIndex 0-6] = [lessen] */
+    public static function weekGrid(
+        Carbon $start,
+        ?int $lestypeId = null,
+        ?int $trainerId = null,
+        ?int $dag = null
+    ): array {
+        $lessen = static::with(['lestype', 'trainer', 'locatie'])
+            ->withCount(['reserveringen as bevestigd_aantal' => fn($q) => $q->where('status', 'bevestigd')])
             ->whereBetween('starttijd', [$start->copy()->startOfDay(), $start->copy()->addDays(6)->endOfDay()])
-            ->when($lestypeId, fn ($q) => $q->where('lestype_id', $lestypeId))
+            ->when($lestypeId, fn($q) => $q->where('lestype_id', $lestypeId))
+            ->when($trainerId, fn($q) => $q->where('trainer_id', $trainerId))
             ->orderBy('starttijd')
             ->get();
 
         $grid = [];
         foreach ($lessen as $les) {
-            $uur  = $les->starttijd->hour;
+            $dagIndex = $les->starttijd->dayOfWeekIso - 1;
+
+            if ($dag !== null && $dagIndex !== $dag - 1) {
+                continue;
+            }
+
+            $uur = $les->starttijd->hour;
             $deel = $uur < 12 ? 'ochtend' : ($uur < 18 ? 'middag' : 'avond');
-            $grid[$deel][$les->starttijd->dayOfWeekIso - 1][] = $les;
+            $grid[$deel][$dagIndex][] = $les;
         }
 
         return $grid;

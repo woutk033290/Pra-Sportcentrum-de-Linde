@@ -19,6 +19,7 @@
     <main class="beheer-main">
         <h1>Welkom, {{ auth('beheer')->user()->voornaam }}</h1>
         <p>Je bent ingelogd als beheerder. Hier komen de overzichten.</p>
+        <a href="{{ route('beheer.lessen') }}" class="btn" style="margin-top: 1rem;">Lessen beheren</a>
     </main>
 </body>
 </html>

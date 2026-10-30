@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lesreeks extends Model
 {
-    //
-        protected $table = 'lestypen';
-
+    protected $table = 'lesreeksen';
+    protected $guarded = [];
 }
