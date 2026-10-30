@@ -29,5 +29,8 @@ Route::middleware('auth:beheer')
         Route::post('/uitloggen', [LoginController::class, 'uitloggen'])->name('uitloggen');
         Route::get('/lessen', [BeheerLesController::class, 'index'])->name('lessen');
         Route::post('/lessen', [BeheerLesController::class, 'opslaan'])->name('lessen.opslaan');
+        Route::get('/lessen/{groepsles}/bewerken', [BeheerLesController::class, 'bewerken'])->name('lessen.bewerken');
+        Route::put('/lessen/{groepsles}', [BeheerLesController::class, 'bijwerken'])->name('lessen.bijwerken');
+        Route::delete('/lessen/{groepsles}', [BeheerLesController::class, 'verwijderen'])->name('lessen.verwijderen');
         // Hier komen de overzichten (lessen, leden, reserveringen, ...)
     });
