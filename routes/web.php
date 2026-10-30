@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoosterController;
 use App\Http\Controllers\BeheerLesController;
 use App\Http\Controllers\LesController;
+use App\Http\Controllers\ActiveerController;
+use App\Http\Controllers\BeheerDashboardController;
 
 Route::get('/', function () {
     return view('index');
@@ -21,14 +23,19 @@ Route::post('/login', [LoginController::class, 'verwerken'])
     ->middleware('throttle:5,1')
     ->name('login.verwerken');
 
+// Account activeren via uitnodigingslink
+Route::get('/activeren/{token}', [ActiveerController::class, 'toon'])->name('account.activeren');
+Route::post('/activeren/{token}', [ActiveerController::class, 'opslaan'])
+    ->middleware('throttle:10,1')
+    ->name('account.activeren.opslaan');
 // Beheergedeelte: alleen bereikbaar als beheerder
 Route::middleware('auth:beheer')
     ->prefix('beheer')
     ->name('beheer.')
     ->group(function () {
-        Route::get('/', function () {
-            return view('beheer.dashboard');
-        })->name('dashboard');
+        Route::get('/', [BeheerDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/collegas', [BeheerDashboardController::class, 'collegaOpslaan'])->name('collegas.opslaan');
+        Route::post('/collegas/{gebruiker}/uitnodiging', [BeheerDashboardController::class, 'nieuweUitnodiging'])->name('collegas.uitnodiging');
 
         Route::post('/uitloggen', [LoginController::class, 'uitloggen'])->name('uitloggen');
         Route::get('/lessen', [BeheerLesController::class, 'index'])->name('lessen');

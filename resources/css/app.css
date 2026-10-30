@@ -948,3 +948,41 @@ textarea.veld-input {
 .link-knop:hover {
     background: #fdecea;
 }
+
+/* Beheerdashboard: collega's */
+.kolom-vol {
+    grid-column: 1 / -1;
+}
+
+.kolom-vol h1 {
+    margin-bottom: 0.75rem;
+    color: var(--blauw-donker);
+}
+
+.uitnodiging-link {
+    margin-top: 0.6rem;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 0.05rem 0.55rem;
+    border-radius: 999px;
+    background: var(--blauw-licht);
+    color: var(--blauw-donker);
+    font-size: 0.75rem;
+}
+
+.status-pill-wacht {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.collega-email {
+    color: var(--blauw);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.collega-email:hover {
+    text-decoration: underline;
+}
