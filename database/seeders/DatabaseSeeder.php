@@ -6,7 +6,9 @@ use App\Models\Gebruiker;
 use App\Models\Groepsles;
 use App\Models\Lestype;
 use App\Models\Locatie;
+use App\Models\Reservering;
 use Illuminate\Database\Seeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -95,6 +97,27 @@ class DatabaseSeeder extends Seeder
                 'eindtijd' => $start->copy()->addMinutes($type->duur_minuten),
                 'maximaal_aantal_deelnemers' => $type->standaard_capaciteit,
                 'status' => 'gepland',
+            ]);
+        }
+        $les = Groepsles::orderBy('starttijd')->first();
+
+        foreach ([['Anna', 'de Vries'], ['Jan', 'Bakker'], ['Lisa', 'Smit']] as $i => [$voornaam, $achternaam]) {
+            $lid = Gebruiker::create([
+                'voornaam' => $voornaam,
+                'achternaam' => $achternaam,
+                'email' => strtolower($voornaam) . '@example.com',
+                'telefoonnummer' => '060000000' . $i,
+                'password' => bcrypt('wachtwoord'),
+                'rol' => 'lid',
+                'voorwaarden_akkoord_op' => now(),
+                'geactiveerd_op' => now(),
+            ]);
+
+            Reservering::create([
+                'gebruiker_id' => $lid->id,
+                'groepsles_id' => $les->id,
+                'status' => 'bevestigd',
+                'aangemeld_op' => now(),
             ]);
         }
     }

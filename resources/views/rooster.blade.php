@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rooster - Sportschool De Linde</title>
     @vite(['resources/css/app.css'])
 </head>
+
 <body>
     @include('partials.nav')
 
@@ -24,25 +26,25 @@
             {{-- Bovenste balk: week wisselen + filters --}}
             <div class="rooster-balk">
                 <div class="rooster-week">
-                    <a href="{{ route('rooster', array_merge($query, ['week' => $vorige])) }}"
-                       class="rooster-pijl" aria-label="Vorige week">&lsaquo;</a>
+                    <a href="{{ route('rooster', array_merge($query, ['week' => $vorige])) }}" class="rooster-pijl"
+                        aria-label="Vorige week">&lsaquo;</a>
 
                     <strong class="rooster-weeklabel">{{ $weekLabel }}</strong>
 
-                    <a href="{{ route('rooster', array_merge($query, ['week' => $volgende])) }}"
-                       class="rooster-pijl" aria-label="Volgende week">&rsaquo;</a>
+                    <a href="{{ route('rooster', array_merge($query, ['week' => $volgende])) }}" class="rooster-pijl"
+                        aria-label="Volgende week">&rsaquo;</a>
 
                     <a href="{{ route('rooster', array_merge($query, ['week' => null])) }}"
-                       class="rooster-vandaag">Vandaag</a>
+                        class="rooster-vandaag">Vandaag</a>
                 </div>
 
                 <div class="rooster-pills">
                     <a href="{{ route('rooster', array_merge($query, ['type' => null])) }}"
-                       class="pill {{ $gekozenType ? '' : 'pill-actief' }}">Alle</a>
+                        class="pill {{ $gekozenType ? '' : 'pill-actief' }}">Alle</a>
 
                     @foreach ($lestypen as $type)
                         <a href="{{ route('rooster', array_merge($query, ['type' => $type->id])) }}"
-                           class="pill {{ $gekozenType === $type->id ? 'pill-actief' : '' }}">{{ $type->naam }}</a>
+                            class="pill {{ $gekozenType === $type->id ? 'pill-actief' : '' }}">{{ $type->naam }}</a>
                     @endforeach
                 </div>
             </div>
@@ -99,14 +101,14 @@
                                         @foreach ($grid[$sleutel][$i] ?? [] as $les)
                                             @php
                                                 $geannuleerd = $les->status === 'geannuleerd';
-                                                $vol = ! $geannuleerd
+                                                $vol = !$geannuleerd
                                                     && $les->bevestigd_aantal >= $les->maximaal_aantal_deelnemers;
                                             @endphp
 
                                             {{-- TODO: link naar de lesinfo/aanmelden-pagina zodra die bestaat --}}
-                                            <a href="#"
-                                               class="les-blok {{ $geannuleerd ? 'les-geannuleerd' : '' }}"
-                                               title="{{ $les->trainer->voornaam }} {{ $les->trainer->achternaam }} · {{ $les->locatie->naam }}">
+                                            <a href="{{ route('les.tonen', $les) }}"
+                                                class="les-blok {{ $geannuleerd ? 'les-geannuleerd' : '' }}"
+                                                title="{{ $les->trainer->voornaam }} {{ $les->trainer->achternaam }} · {{ $les->locatie->naam }}">
                                                 <span class="les-blok-naam">
                                                     {{ $les->naam ?: $les->lestype->naam }} {{ $les->starttijd->format('H:i') }}
                                                 </span>
@@ -139,4 +141,5 @@
 
     @include('partials.footer')
 </body>
+
 </html>
