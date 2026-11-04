@@ -17,6 +17,7 @@
             <a href="{{ url('/') }}" class="terug-knop">&larr; Terug</a>
 
             <h1 class="login-title">Inloggen</h1>
+            <a href="{{ route('registreren') }}" class="mb-5 inline-block text-blue-700 underline">Nieuw account maken</a>
 
             @if (session('succes'))
                 <div class="melding-succes">{{ session('succes') }}</div>

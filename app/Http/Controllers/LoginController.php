@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-    public function toon()
+    public function toon(): View|RedirectResponse
     {
         if (Auth::guard('beheer')->check()) {
             return redirect()->route('beheer.dashboard');
@@ -16,27 +18,41 @@ class LoginController extends Controller
         return view('loginpagina');
     }
 
-    public function verwerken(Request $request)
+    public function verwerken(Request $request): RedirectResponse
     {
         $gegevens = $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ], [
-            'email.required'    => 'Vul je e-mailadres in.',
-            'email.email'       => 'Vul een geldig e-mailadres in.',
+            'email.required' => 'Vul je e-mailadres in.',
+            'email.email' => 'Vul een geldig e-mailadres in.',
             'password.required' => 'Vul je wachtwoord in.',
         ]);
 
         // Alleen actieve, niet-verwijderde gebruikers met de rol beheerder mogen erin.
         $gelukt = Auth::guard('beheer')->attempt([
-            'email'         => $gegevens['email'],
-            'password'      => $gegevens['password'],
-            'rol'           => 'beheerder',
+            'email' => $gegevens['email'],
+            'password' => $gegevens['password'],
+            'rol' => 'beheerder',
             'verwijderd_op' => null,
             fn ($query) => $query->whereNotNull('geactiveerd_op'),
         ]);
 
         if (! $gelukt) {
+            $lidIngelogd = Auth::guard('web')->attempt([
+                'email' => $gegevens['email'],
+                'password' => $gegevens['password'],
+                'rol' => 'lid',
+                'verwijderd_op' => null,
+                fn ($query) => $query->whereNotNull('geactiveerd_op'),
+            ]);
+
+            if ($lidIngelogd) {
+                $request->session()->regenerate();
+
+                return redirect()->route('rooster');
+            }
+
             return back()
                 ->withInput($request->only('email'))
                 ->with('error', 'E-mailadres of wachtwoord is onjuist.');
@@ -47,9 +63,10 @@ class LoginController extends Controller
         return redirect()->intended(route('beheer.dashboard'));
     }
 
-    public function uitloggen(Request $request)
+    public function uitloggen(Request $request): RedirectResponse
     {
         Auth::guard('beheer')->logout();
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

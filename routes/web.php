@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\LoginController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoosterController;
-use App\Http\Controllers\BeheerLesController;
-use App\Http\Controllers\LesController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActiveerController;
 use App\Http\Controllers\BeheerDashboardController;
+use App\Http\Controllers\BeheerLesController;
+use App\Http\Controllers\LesController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RoosterController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('index');
@@ -18,6 +19,10 @@ Route::post('/rooster/{groepsles}/aanmelden', [LesController::class, 'aanmelden'
 Route::post('/rooster/{groepsles}/annuleren', [LesController::class, 'annuleren'])->name('les.annuleren');
 Route::post('/rooster/{groepsles}/afmelden/{reservering}', [LesController::class, 'afmelden'])->name('les.afmelden');
 // Inloggen beheerder
+Route::view('/registreren', 'auth.registreren')->name('registreren');
+Route::post('/registreren', [AccountController::class, 'register'])
+    ->middleware('throttle:10,1')->name('registreren.store');
+Route::post('/uitloggen', [LoginController::class, 'uitloggen'])->name('uitloggen');
 Route::get('/login', [LoginController::class, 'toon'])->name('login');
 Route::post('/login', [LoginController::class, 'verwerken'])
     ->middleware('throttle:5,1')

@@ -19,6 +19,12 @@
             @csrf
             <button type="submit" class="site-nav-knop">uitloggen</button>
         </form>
+    @elseif (auth('web')->check())
+        <span>{{ auth('web')->user()->voornaam }}</span>
+        <form method="POST" action="{{ route('uitloggen') }}">
+            @csrf
+            <button type="submit" class="site-nav-knop">uitloggen</button>
+        </form>
     @else
         <a href="{{ route('login') }}">inlog</a>
     @endif

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Gebruiker;
 use App\Models\User;
 
 return [
@@ -37,18 +38,18 @@ return [
     |
     */
 
-'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'gebruikers',
+        ],
 
-    // Aparte guard voor het beheergedeelte (tabel: gebruikers)
-    'beheer' => [
-        'driver' => 'session',
-        'provider' => 'gebruikers',
+        // Aparte guard voor het beheergedeelte (tabel: gebruikers)
+        'beheer' => [
+            'driver' => 'session',
+            'provider' => 'gebruikers',
+        ],
     ],
-],
 
     /*
     |--------------------------------------------------------------------------
@@ -67,17 +68,17 @@ return [
     |
     */
 
-'providers' => [
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => env('AUTH_MODEL', User::class),
-    ],
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', User::class),
+        ],
 
-    'gebruikers' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Gebruiker::class,
+        'gebruikers' => [
+            'driver' => 'eloquent',
+            'model' => Gebruiker::class,
+        ],
     ],
-],
 
     /*
     |--------------------------------------------------------------------------
