@@ -98,5 +98,5 @@ test('leden met ongeldige gegevens krijgen geen sessie', function (array $overri
     'verkeerd wachtwoord' => [[], 'verkeerdwachtwoord'],
     'inactief lid' => [['geactiveerd_op' => null], 'veiligwachtwoord'],
     'verwijderd lid' => [['verwijderd_op' => '2026-01-01 00:00:00'], 'veiligwachtwoord'],
-    'trainer' => [['rol' => 'trainer'], 'veiligwachtwoord'],
+    'inactieve trainer' => [['rol' => 'trainer', 'geactiveerd_op' => null], 'veiligwachtwoord'],
 ]);

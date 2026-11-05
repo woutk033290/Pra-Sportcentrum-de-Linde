@@ -41,7 +41,9 @@
                                     @if ($geannuleerd)
                                         <span class="les-badge">Geannuleerd</span>
                                     @elseif ($vol)
-                                        <span class="les-badge">Vol</span>
+                                        <span class="les-badge">0 plekken vrij · Vol</span>
+                                    @else
+                                        <span class="les-badge">{{ max(0, $les->maximaal_aantal_deelnemers - $les->bevestigd_aantal) }} {{ $les->maximaal_aantal_deelnemers - $les->bevestigd_aantal === 1 ? 'plek' : 'plekken' }} vrij</span>
                                     @endif
                                 </a>
                             @endforeach

@@ -2,13 +2,20 @@
 
 namespace App\Models;
 
+use Database\Factories\GroepslesFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class Groepsles extends Model
 {
+    /** @use HasFactory<GroepslesFactory> */
+    use HasFactory;
+
     protected $table = 'groepslessen';
+
     protected $guarded = [];
+
     protected $casts = [
         'starttijd' => 'datetime',
         'eindtijd' => 'datetime',
@@ -43,10 +50,10 @@ class Groepsles extends Model
         ?int $dag = null
     ): array {
         $lessen = static::with(['lestype', 'trainer', 'locatie'])
-            ->withCount(['reserveringen as bevestigd_aantal' => fn($q) => $q->where('status', 'bevestigd')])
+            ->withCount(['reserveringen as bevestigd_aantal' => fn ($q) => $q->where('status', 'bevestigd')])
             ->whereBetween('starttijd', [$start->copy()->startOfDay(), $start->copy()->addDays(6)->endOfDay()])
-            ->when($lestypeId, fn($q) => $q->where('lestype_id', $lestypeId))
-            ->when($trainerId, fn($q) => $q->where('trainer_id', $trainerId))
+            ->when($lestypeId, fn ($q) => $q->where('lestype_id', $lestypeId))
+            ->when($trainerId, fn ($q) => $q->where('trainer_id', $trainerId))
             ->orderBy('starttijd')
             ->get();
 

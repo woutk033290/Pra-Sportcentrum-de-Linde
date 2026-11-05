@@ -20,6 +20,11 @@
             <button type="submit" class="site-nav-knop">uitloggen</button>
         </form>
     @elseif (auth('web')->check())
+        @if (auth('web')->user()->rol === 'lid')
+            <a href="{{ route('reserveringen.index') }}">Mijn reserveringen</a>
+        @elseif (auth('web')->user()->rol === 'trainer')
+            <a href="{{ route('trainer.dashboard') }}">Mijn lessen</a>
+        @endif
         <span>{{ auth('web')->user()->voornaam }}</span>
         <form method="POST" action="{{ route('uitloggen') }}">
             @csrf

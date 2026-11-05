@@ -27,7 +27,7 @@ class ReserveringController extends Controller
             $melding = match (true) {
                 $les->status !== 'gepland' || $les->starttijd->lte(now()) => 'Deze les is niet meer beschikbaar.',
                 $bestaand?->status === 'bevestigd' => 'Je hebt deze les al gereserveerd.',
-                $les->reserveringen()->count() >= $les->maximaal_aantal_deelnemers => 'Deze les is vol.',default => null
+                $les->reserveringen()->where('status', 'bevestigd')->count() >= $les->maximaal_aantal_deelnemers => 'Deze les is vol.',default => null
             };
             if ($melding) {
                 throw ValidationException::withMessages(['reservering' => $melding]);
@@ -40,15 +40,19 @@ class ReserveringController extends Controller
 
     public function destroy(Request $request, Reservering $reservering): RedirectResponse
     {
-        abort_unless($request->user()->rol === 'beheerder' || $reservering->gebruiker_id === $request->user()->id, 403);
-        DB::transaction(function () use ($request, $reservering): void {
+        abort_unless($reservering->gebruiker_id === $request->user()->id, 403);
+        DB::transaction(function () use ($reservering): void {
             $les = Groepsles::lockForUpdate()->findOrFail($reservering->groepsles_id);
-            if ($request->user()->rol !== 'beheerder' && now()->startOfSecond()->gt($les->starttijd->copy()->subHours(2))) {
+            $reservering = Reservering::lockForUpdate()->findOrFail($reservering->id);
+            if ($reservering->status !== 'bevestigd') {
+                throw ValidationException::withMessages(['reservering' => 'Deze reservering is al geannuleerd.']);
+            }
+            if (now()->gt($les->starttijd->copy()->subHours(2))) {
                 throw ValidationException::withMessages(['reservering' => 'Annuleren kan tot uiterlijk 2 uur voor aanvang.']);
             }
             $reservering->update(['status' => 'geannuleerd', 'geannuleerd_op' => now()]);
         });
 
-        return back()->with('status', 'De reservering is geannuleerd. De plek is weer vrij.');
+        return to_route('reserveringen.index')->with('status', 'De reservering is geannuleerd. De plek is weer vrij.');
     }
 }

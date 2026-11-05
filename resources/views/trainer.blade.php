@@ -1,1 +1,29 @@
-<x-layout title="Mijn lessen"><p class="eyebrow">Trainergedeelte</p><h1 class="heading mb-8">Jouw lessen, {{ auth()->user()->voornaam }}.</h1><div class="grid gap-4">@forelse($lessen as $les)<article class="panel flex flex-wrap items-center justify-between gap-4"><div><p class="eyebrow">{{ $les->starttijd->locale('nl')->isoFormat('dddd D MMMM YYYY') }}</p><h2 class="text-2xl font-bold">{{ $les->naam }}</h2><p class="mt-2 text-slate-600">{{ $les->starttijd->format('H:i') }} – {{ $les->eindtijd->format('H:i') }} · {{ $les->locatie->naam }}</p></div><span class="badge">{{ $les->reserveringen_count }} / {{ $les->maximaal_aantal_deelnemers }} deelnemers</span></article>@empty<p class="panel">Er zijn nog geen lessen aan jou gekoppeld.</p>@endforelse</div><div class="mt-6">{{ $lessen->links() }}</div></x-layout>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mijn lessen - De Linde</title>
+    @vite(['resources/css/app.css'])
+</head>
+<body>
+@include('partials.nav')
+<main class="pagina">
+    <h1 class="login-title">Mijn lessen</h1>
+    <p class="mb-6">Welkom, {{ auth('web')->user()->voornaam }}. Hieronder staan de lessen die aan jou zijn gekoppeld.</p>
+    <div class="grid gap-4">
+        @forelse($lessen as $les)
+            <article class="paneel">
+                <h2 class="text-xl font-semibold">{{ $les->naam }}</h2>
+                <p>{{ $les->starttijd->format('d-m-Y') }} · {{ $les->starttijd->format('H:i') }} – {{ $les->eindtijd->format('H:i') }}</p>
+                <p>{{ $les->status === 'geannuleerd' ? 'Geannuleerd' : 'Gepland' }}</p>
+            </article>
+        @empty
+            <p class="paneel">Er zijn nog geen lessen aan jou gekoppeld.</p>
+        @endforelse
+    </div>
+    <div class="mt-6">{{ $lessen->links() }}</div>
+</main>
+@include('partials.footer')
+</body>
+</html>

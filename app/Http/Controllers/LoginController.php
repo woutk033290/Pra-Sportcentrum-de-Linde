@@ -19,6 +19,10 @@ class LoginController extends Controller
             return redirect()->route('rooster');
         }
 
+        if (Auth::guard('web')->user()?->rol === 'trainer') {
+            return redirect()->route('trainer.dashboard');
+        }
+
         return view('loginpagina');
     }
 
@@ -44,18 +48,18 @@ class LoginController extends Controller
         ]);
 
         if (! $gelukt) {
-            $lidIngelogd = Auth::guard('web')->attempt([
+            $gebruikerIngelogd = Auth::guard('web')->attempt([
                 'email' => $gegevens['email'],
                 'password' => $gegevens['password'],
-                'rol' => 'lid',
+                'rol' => ['lid', 'trainer'],
                 'verwijderd_op' => null,
                 fn ($query) => $query->whereNotNull('geactiveerd_op'),
             ]);
 
-            if ($lidIngelogd) {
+            if ($gebruikerIngelogd) {
                 $request->session()->regenerate();
 
-                return redirect()->route('rooster');
+                return redirect()->route(Auth::guard('web')->user()->rol === 'trainer' ? 'trainer.dashboard' : 'rooster');
             }
 
             return back()

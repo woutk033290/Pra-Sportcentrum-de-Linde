@@ -73,7 +73,7 @@
                         @if ($vrij > 0)
                             Nog {{ $vrij }} van {{ $groepsles->maximaal_aantal_deelnemers }} plekken vrij
                         @else
-                            Deze les is vol
+                            Deze les is vol · 0 plekken vrij
                         @endif
                     </p>
                 @endif

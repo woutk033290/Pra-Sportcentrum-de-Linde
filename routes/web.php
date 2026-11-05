@@ -3,14 +3,15 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BeheerDashboardController;
 use App\Http\Controllers\BeheerLesController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LesController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ReserveringController;
 use App\Http\Controllers\RoosterController;
-use App\Http\Middleware\ControleerBeheerder;
 use App\Http\Controllers\TrainerController;
-use App\Http\Controllers\HomeController;
+use App\Http\Middleware\ControleerBeheerder;
+use App\Http\Middleware\RequireRole;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -52,8 +53,13 @@ Route::middleware(['auth:beheer', ControleerBeheerder::class])
         Route::delete('/lessen/{groepsles}', [BeheerLesController::class, 'verwijderen'])->name('lessen.verwijderen');
     });
 
- // Trainergedeelte
-Route::middleware('auth:web')->group(function () {
+// Trainergedeelte
+Route::middleware(['auth:web', RequireRole::class.':trainer'])->group(function () {
     Route::get('/trainer', [TrainerController::class, 'index'])
         ->name('trainer.dashboard');
+});
+
+Route::middleware(['auth:web', RequireRole::class.':lid'])->group(function () {
+    Route::get('/mijn-reserveringen', [ReserveringController::class, 'index'])->name('reserveringen.index');
+    Route::delete('/mijn-reserveringen/{reservering}', [ReserveringController::class, 'destroy'])->name('reserveringen.destroy');
 });

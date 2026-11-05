@@ -14,11 +14,11 @@ class LesController extends Controller
     {
         $groepsles->load(['lestype', 'trainer', 'locatie']);
 
-        $gebruiker  = $this->ingelogdeGebruiker();
+        $gebruiker = $this->ingelogdeGebruiker();
         $kanBeheren = $this->magBeheren($gebruiker, $groepsles);
 
         $bevestigd = $groepsles->reserveringen()->where('status', 'bevestigd')->count();
-        $vrij      = max(0, $groepsles->maximaal_aantal_deelnemers - $bevestigd);
+        $vrij = max(0, $groepsles->maximaal_aantal_deelnemers - $bevestigd);
 
         // Andere momenten van hetzelfde lestype
         $andere = Groepsles::where('lestype_id', $groepsles->lestype_id)
@@ -46,14 +46,14 @@ class LesController extends Controller
             : false;
 
         return view('les', [
-            'groepsles'       => $groepsles,
-            'gebruiker'       => $gebruiker,
-            'kanBeheren'      => $kanBeheren,
-            'isBeheerder'     => $gebruiker?->rol === 'beheerder',
-            'bevestigd'       => $bevestigd,
-            'vrij'            => $vrij,
-            'andere'          => $andere,
-            'deelnemers'      => $deelnemers,
+            'groepsles' => $groepsles,
+            'gebruiker' => $gebruiker,
+            'kanBeheren' => $kanBeheren,
+            'isBeheerder' => $gebruiker?->rol === 'beheerder',
+            'bevestigd' => $bevestigd,
+            'vrij' => $vrij,
+            'andere' => $andere,
+            'deelnemers' => $deelnemers,
             'eigenAanmelding' => $eigenAanmelding,
         ]);
     }
@@ -94,15 +94,15 @@ class LesController extends Controller
             if ($bestaand) {
                 // Eerder afgemeld: dezelfde reservering weer activeren (unieke combinatie lid + les)
                 $bestaand->update([
-                    'status'         => 'bevestigd',
-                    'aangemeld_op'   => now(),
+                    'status' => 'bevestigd',
+                    'aangemeld_op' => now(),
                     'geannuleerd_op' => null,
                 ]);
             } else {
                 Reservering::create([
                     'gebruiker_id' => $gebruiker->id,
                     'groepsles_id' => $les->id,
-                    'status'       => 'bevestigd',
+                    'status' => 'bevestigd',
                     'aangemeld_op' => now(),
                 ]);
             }
@@ -126,12 +126,12 @@ class LesController extends Controller
 
         if ($reservering->status === 'bevestigd') {
             $reservering->update([
-                'status'         => 'geannuleerd',
+                'status' => 'geannuleerd',
                 'geannuleerd_op' => now(),
             ]);
         }
 
-        $naam = $reservering->gebruiker->voornaam . ' ' . $reservering->gebruiker->achternaam;
+        $naam = $reservering->gebruiker->voornaam.' '.$reservering->gebruiker->achternaam;
 
         return $this->terug($groepsles, 'succes', "{$naam} is afgemeld. Er is weer een plek vrij.");
     }
@@ -157,7 +157,7 @@ class LesController extends Controller
             $gebruiker = Auth::guard($guard)->user();
 
             // Een verwijderd account telt niet meer als ingelogd
-            if ($gebruiker instanceof Gebruiker && $gebruiker->verwijderd_op === null) {
+            if ($gebruiker instanceof Gebruiker && $gebruiker->verwijderd_op === null && $gebruiker->geactiveerd_op !== null) {
                 return $gebruiker;
             }
         }

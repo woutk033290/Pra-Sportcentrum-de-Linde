@@ -8,7 +8,7 @@
 <a class="nav-link" href="{{ route('home') }}">Home</a><a class="nav-link" href="{{ route('rooster') }}">Lesrooster</a>
 @auth
 @if(auth()->user()->rol === 'lid')<a class="nav-link" href="{{ route('reserveringen.index') }}">Mijn reserveringen</a>@endif
-@if(auth()->user()->rol === 'trainer')<a class="nav-link" href="{{ route('trainer') }}">Mijn lessen</a>@endif
+@if(auth()->user()->rol === 'trainer')<a class="nav-link" href="{{ route('trainer.dashboard') }}">Mijn lessen</a>@endif
 @if(auth()->user()->rol === 'beheerder')<a class="nav-link" href="{{ route('beheer.dashboard') }}">Beheer</a>@endif
 <form method="post" action="{{ route('uitloggen') }}">@csrf<button class="button-secondary">Uitloggen</button></form>
 @else

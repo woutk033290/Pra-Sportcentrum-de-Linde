@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use Database\Factories\GebruikerFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Gebruiker extends Authenticatable
 {
+    /** @use HasFactory<GebruikerFactory> */
+    use HasFactory;
+
     protected $table = 'gebruikers';
+
     protected $guarded = [];
 
     protected $hidden = ['password'];
