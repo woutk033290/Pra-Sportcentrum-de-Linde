@@ -156,7 +156,8 @@ class LesController extends Controller
         foreach (['beheer', 'web'] as $guard) {
             $gebruiker = Auth::guard($guard)->user();
 
-            if ($gebruiker instanceof Gebruiker) {
+            // Een verwijderd account telt niet meer als ingelogd
+            if ($gebruiker instanceof Gebruiker && $gebruiker->verwijderd_op === null) {
                 return $gebruiker;
             }
         }

@@ -22,14 +22,13 @@
 
         @if (session('succes'))
             <div class="kolom-vol">
-                <div class="melding-succes">
-                    {{ session('succes') }}
+                <div class="melding-succes">{{ session('succes') }}</div>
+            </div>
+        @endif
 
-                    @if (session('uitnodigingslink'))
-                        <input type="text" readonly value="{{ session('uitnodigingslink') }}" onclick="this.select()"
-                            class="veld-input uitnodiging-link" aria-label="Activatielink">
-                    @endif
-                </div>
+        @if (session('fout'))
+            <div class="kolom-vol">
+                <div class="login-error">{{ session('fout') }}</div>
             </div>
         @endif
 
@@ -53,17 +52,31 @@
                                     @if ($collega->geactiveerd_op)
                                         <span class="status-pill">Actief</span>
                                     @else
-                                        <span class="status-pill status-pill-wacht">Wacht op activatie</span>
+                                        <span class="status-pill status-pill-wacht">Geen wachtwoord</span>
                                     @endif
                                 </span>
                             </div>
 
-                            @unless ($collega->geactiveerd_op)
-                                <form method="POST" action="{{ route('beheer.collegas.uitnodiging', $collega) }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-rand btn-klein">Nieuwe link</button>
-                                </form>
-                            @endunless
+                            {{-- Je eigen account kun je niet verwijderen --}}
+                            @if ($collega->id !== auth('beheer')->id())
+                                <div class="les-acties">
+                                    <form method="POST" action="{{ route('beheer.collegas.verwijderen', $collega) }}"
+                                        onsubmit="return confirm({{ Js::from('Weet je zeker dat je het account van ' . $collega->voornaam . ' ' . $collega->achternaam . ' wilt verwijderen? Deze persoon kan daarna niet meer inloggen.') }});">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="icoon-knop icoon-gevaar" title="Verwijderen"
+                                            aria-label="Account van {{ $collega->voornaam }} {{ $collega->achternaam }} verwijderen">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path
+                                                    d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                                <line x1="10" y1="11" x2="10" y2="17" />
+                                                <line x1="14" y1="11" x2="14" y2="17" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         </li>
                     @endforeach
                 </ul>
@@ -124,6 +137,21 @@
                             <option value="beheerder" @selected(old('rol') === 'beheerder')>Beheerder</option>
                         </select>
                         @error('rol') <span class="veld-fout">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                <div class="form-rij form-rij-2">
+                    <div class="veld">
+                        <label for="password">Wachtwoord (minimaal 8 tekens)</label>
+                        <input type="password" id="password" name="password" class="veld-input"
+                            autocomplete="new-password" minlength="8" required>
+                        @error('password') <span class="veld-fout">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="veld">
+                        <label for="password_confirmation">Herhaal wachtwoord</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            class="veld-input" autocomplete="new-password" minlength="8" required>
                     </div>
                 </div>
 
