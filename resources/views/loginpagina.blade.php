@@ -24,18 +24,18 @@
             @endif
 
             @if (session('error'))
-                <div class="login-error">{{ session('error') }}</div>
+                <div class="login-error" role="alert">{{ session('error') }}</div>
             @endif
 
             @if ($errors->any())
-                <div class="login-error">
+                <div class="login-error" role="alert">
                     @foreach ($errors->all() as $fout)
                         <div>{{ $fout }}</div>
                     @endforeach
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login.verwerken') }}">
+            <form method="POST" action="{{ route('login.verwerken') }}" novalidate>
                 @csrf
 
                 <div class="login-group">

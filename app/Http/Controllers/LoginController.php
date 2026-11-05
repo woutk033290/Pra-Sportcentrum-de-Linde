@@ -15,6 +15,10 @@ class LoginController extends Controller
             return redirect()->route('beheer.dashboard');
         }
 
+        if (Auth::guard('web')->user()?->rol === 'lid') {
+            return redirect()->route('rooster');
+        }
+
         return view('loginpagina');
     }
 
@@ -22,11 +26,12 @@ class LoginController extends Controller
     {
         $gegevens = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
+            'password' => ['required', 'string'],
         ], [
             'email.required' => 'Vul je e-mailadres in.',
             'email.email' => 'Vul een geldig e-mailadres in.',
             'password.required' => 'Vul je wachtwoord in.',
+            'password.string' => 'Vul een geldig wachtwoord in.',
         ]);
 
         // Alleen actieve, niet-verwijderde gebruikers met de rol beheerder mogen erin.
