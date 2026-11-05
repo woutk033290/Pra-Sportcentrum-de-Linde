@@ -986,3 +986,21 @@ textarea.veld-input {
 .collega-email:hover {
     text-decoration: underline;
 }
+
+/* Home: mini rooster */
+.home-rooster {
+    margin-top: 2.5rem;
+}
+
+.rooster-filter-label {
+    align-self: center;
+    margin-right: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.les-afbeelding img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

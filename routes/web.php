@@ -8,12 +8,11 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RoosterController;
 use App\Http\Middleware\ControleerBeheerder;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Rooster en lesdetails
 Route::get('/rooster', [RoosterController::class, 'index'])->name('rooster');
