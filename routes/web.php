@@ -7,7 +7,9 @@ use App\Http\Controllers\LesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RoosterController;
 use App\Http\Middleware\ControleerBeheerder;
+use App\Http\Controllers\TrainerController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('index');
@@ -50,3 +52,9 @@ Route::middleware(['auth:beheer', ControleerBeheerder::class])
         Route::put('/lessen/{groepsles}', [BeheerLesController::class, 'bijwerken'])->name('lessen.bijwerken');
         Route::delete('/lessen/{groepsles}', [BeheerLesController::class, 'verwijderen'])->name('lessen.verwijderen');
     });
+
+ // Trainergedeelte
+Route::middleware('auth:web')->group(function () {
+    Route::get('/trainer', [TrainerController::class, 'index'])
+        ->name('trainer.dashboard');
+});
