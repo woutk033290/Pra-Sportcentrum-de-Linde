@@ -49,7 +49,6 @@
                     <li><strong>Doelgroep</strong> {{ $lestype->doelgroep }}</li>
                     <li><strong>Niveau</strong> {{ $lestype->niveau }}</li>
                     <li><strong>Wat neem je mee?</strong> {{ $lestype->benodigdheden }}</li>
-                    <li><strong>Duur</strong> {{ $lestype->duur_minuten }} minuten</li>
                 </ul>
             </div>
 
