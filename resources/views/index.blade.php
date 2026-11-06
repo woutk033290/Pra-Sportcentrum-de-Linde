@@ -24,7 +24,7 @@
                     <div class="les-inhoud">
                         <h3>{{ $type->naam }}</h3>
                         <p>{{ \Illuminate\Support\Str::limit($type->beschrijving, 90) }}</p>
-                        <a href="{{ route('rooster', ['type' => $type->id]) }}" class="btn btn-rand">Meer info &rarr;</a>
+                        <a href="{{ route('lestype.tonen', \Illuminate\Support\Str::slug($type->naam)) }}" class="btn btn-rand">Meer info &rarr;</a>
                     </div>
                 </article>
             @endforeach

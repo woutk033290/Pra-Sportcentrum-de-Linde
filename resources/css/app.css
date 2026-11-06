@@ -35,18 +35,20 @@ body {
     background: var(--blauw-licht);
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
-}
+@layer base {
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
 
-h1, h2, h3, h4, p, figure {
-    margin: 0;
-}
+    h1, h2, h3, h4, p, figure {
+        margin: 0;
+    }
 
-p {
-    color: var(--tekst-zacht);
-    line-height: 1.6;
+    p {
+        color: var(--tekst-zacht);
+        line-height: 1.6;
+    }
 }
 
 a:focus-visible,
@@ -1003,4 +1005,133 @@ textarea.veld-input {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Account: tabs en aanmeldblok */
+.account-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    padding: 0.25rem;
+    border: 1px solid var(--blauw-rand);
+    border-radius: 12px;
+    background: var(--blauw-licht);
+}
+
+.account-tab {
+    padding: 0.75rem 1rem;
+    border-radius: 9px;
+    color: var(--blauw);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.account-tab:hover {
+    background: var(--blauw-rand);
+}
+
+.account-tab-actief,
+.account-tab-actief:hover {
+    background: var(--blauw);
+    color: var(--wit);
+    box-shadow: 0 2px 6px rgba(29, 78, 216, 0.3);
+}
+
+.account-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--blauw-rand);
+}
+
+/* Lesinfo per lessoort */
+.info-rij {
+    display: grid;
+    grid-template-columns: minmax(220px, 300px) 1fr;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.info-rij-omgekeerd {
+    grid-template-columns: 1fr minmax(220px, 300px);
+}
+
+.info-foto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 190px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--blauw-rand);
+    color: var(--blauw);
+    font-size: 0.9rem;
+}
+
+.info-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info-titel {
+    margin-bottom: 0.5rem;
+    color: var(--blauw-donker);
+    font-size: 1.6rem;
+}
+
+.info-tekst p {
+    max-width: 42rem;
+}
+
+.info-feiten {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.info-feiten li {
+    color: var(--tekst-zacht);
+}
+
+.info-feiten strong {
+    display: inline-block;
+    min-width: 10rem;
+    color: var(--tekst);
+}
+
+.les-link {
+    color: var(--blauw-donker);
+    font-weight: 600;
+}
+
+.les-link:hover {
+    text-decoration: underline;
+}
+
+.les-tijd {
+    color: var(--tekst-zacht);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 700px) {
+    .info-rij,
+    .info-rij-omgekeerd {
+        grid-template-columns: 1fr;
+    }
+
+    .info-rij-omgekeerd .info-foto {
+        order: -1;
+    }
 }

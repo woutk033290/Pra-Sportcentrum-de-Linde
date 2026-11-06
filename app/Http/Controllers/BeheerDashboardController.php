@@ -6,6 +6,7 @@ use App\Models\Gebruiker;
 use App\Models\Groepsles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class BeheerDashboardController extends Controller
@@ -43,6 +44,7 @@ class BeheerDashboardController extends Controller
             'telefoonnummer' => ['required', 'regex:/^[0-9+\s()\-]{6,20}$/'],
             'rol' => ['required', 'in:trainer,beheerder'],
             'trainer_bio' => ['nullable', 'string', 'max:1000'],
+            'profielfoto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'required' => 'Het veld :attribute is verplicht.',
@@ -51,6 +53,10 @@ class BeheerDashboardController extends Controller
             'in' => 'Kies een geldige rol.',
             'max.string' => 'De :attribute is te lang (maximaal :max tekens).',
             'telefoonnummer.regex' => 'Vul een geldig telefoonnummer in.',
+            'profielfoto.image' => 'De foto moet een afbeelding zijn.',
+            'profielfoto.mimes' => 'De foto moet een jpg, png of webp zijn.',
+            'profielfoto.max' => 'De foto mag maximaal 2 MB groot zijn.',
+            'profielfoto.uploaded' => 'De foto kon niet worden geüpload (maximaal 2 MB).',
             'password.min' => 'Het wachtwoord moet minimaal 8 tekens lang zijn.',
             'password.confirmed' => 'De twee wachtwoorden komen niet overeen.',
         ], [
@@ -74,6 +80,10 @@ class BeheerDashboardController extends Controller
             'geactiveerd_op' => now(), // de beheerder stelt het wachtwoord in, dus meteen actief
         ];
 
+        if ($request->hasFile('profielfoto')) {
+            $gegevens['profielfoto_pad'] = $request->file('profielfoto')->store('profielfoto', 'public');
+        }
+
         if ($wachtend) {
             $wachtend->update($gegevens);
             $collega = $wachtend;
@@ -84,6 +94,45 @@ class BeheerDashboardController extends Controller
         return redirect()->route('beheer.dashboard')
             ->with('succes', "{$collega->voornaam} {$collega->achternaam} is toegevoegd als {$collega->rol} "
                 . 'en kan nu inloggen met het ingestelde wachtwoord.');
+    }
+
+    /** Foto van een bestaande collega (trainer of beheerder) toevoegen, vervangen of weghalen. */
+    public function collegaFoto(Request $request, Gebruiker $gebruiker)
+    {
+        abort_unless(
+            in_array($gebruiker->rol, ['trainer', 'beheerder'], true) && $gebruiker->verwijderd_op === null,
+            404
+        );
+
+        $request->validate([
+            'profielfoto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ], [
+            'profielfoto.image' => 'De foto moet een afbeelding zijn.',
+            'profielfoto.mimes' => 'De foto moet een jpg, png of webp zijn.',
+            'profielfoto.max' => 'De foto mag maximaal 2 MB groot zijn.',
+            'profielfoto.uploaded' => 'De foto kon niet worden geüpload (maximaal 2 MB).',
+        ]);
+
+        $oud = $gebruiker->profielfoto_pad;
+
+        if ($request->boolean('verwijder_foto') && ! $request->hasFile('profielfoto')) {
+            $gebruiker->update(['profielfoto_pad' => null]);
+            $melding = 'De foto van '.$gebruiker->voornaam.' is verwijderd.';
+        } elseif ($request->hasFile('profielfoto')) {
+            $gebruiker->update([
+                'profielfoto_pad' => $request->file('profielfoto')->store('profielfoto', 'public'),
+            ]);
+            $melding = 'De foto van '.$gebruiker->voornaam.' is opgeslagen.';
+        } else {
+            return redirect()->route('beheer.dashboard')->with('fout', 'Kies eerst een foto om te uploaden.');
+        }
+
+        // Het oude bestand opruimen, maar alleen als het in onze eigen map staat
+        if ($oud && str_starts_with($oud, 'profielfoto/')) {
+            Storage::disk('public')->delete($oud);
+        }
+
+        return redirect()->route('beheer.dashboard')->with('succes', $melding);
     }
 
     public function collegaVerwijderen(Gebruiker $gebruiker)

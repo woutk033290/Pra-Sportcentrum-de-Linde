@@ -5,6 +5,7 @@ use App\Http\Controllers\BeheerDashboardController;
 use App\Http\Controllers\BeheerLesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LesController;
+use App\Http\Controllers\LestypeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReserveringController;
 use App\Http\Controllers\RoosterController;
@@ -14,6 +15,11 @@ use App\Http\Middleware\RequireRole;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Lesinfo per lessoort (spinning, yoga, bootcamp, aquagym)
+Route::get('/lessen/{slug}', [LestypeController::class, 'tonen'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('lestype.tonen');
 
 // Rooster en lesdetails
 Route::get('/rooster', [RoosterController::class, 'index'])->name('rooster');
@@ -42,6 +48,7 @@ Route::middleware(['auth:beheer', ControleerBeheerder::class])
     ->group(function () {
         Route::get('/', [BeheerDashboardController::class, 'index'])->name('dashboard');
         Route::post('/collegas', [BeheerDashboardController::class, 'collegaOpslaan'])->name('collegas.opslaan');
+        Route::post('/collegas/{gebruiker}/foto', [BeheerDashboardController::class, 'collegaFoto'])->name('collegas.foto');
         Route::delete('/collegas/{gebruiker}', [BeheerDashboardController::class, 'collegaVerwijderen'])->name('collegas.verwijderen');
 
         Route::post('/uitloggen', [LoginController::class, 'uitloggen'])->name('uitloggen');

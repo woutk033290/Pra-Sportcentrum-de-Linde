@@ -42,6 +42,10 @@
                 <ul class="les-lijst">
                     @foreach ($collegas as $collega)
                         <li>
+                            @if ($collega->profielfoto_pad)
+                                <img src="{{ asset('storage/' . $collega->profielfoto_pad) }}" alt=""
+                                    style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none;">
+                            @endif
                             <div class="les-info">
                                 <strong>{{ $collega->voornaam }} {{ $collega->achternaam }}</strong>
 
@@ -55,6 +59,19 @@
                                         <span class="status-pill status-pill-wacht">Geen wachtwoord</span>
                                     @endif
                                 </span>
+
+                                <form method="POST" action="{{ route('beheer.collegas.foto', $collega) }}"
+                                    enctype="multipart/form-data" style="margin-top:.4rem;">
+                                    @csrf
+                                    <input type="file" name="profielfoto" accept="image/jpeg,image/png,image/webp"
+                                        aria-label="Foto van {{ $collega->voornaam }} {{ $collega->achternaam }}">
+                                    <button type="submit" class="btn btn-rand">Foto opslaan</button>
+                                    @if ($collega->profielfoto_pad)
+                                        <label style="font-size:.85rem;">
+                                            <input type="checkbox" name="verwijder_foto" value="1"> Foto weghalen
+                                        </label>
+                                    @endif
+                                </form>
                             </div>
 
                             {{-- Je eigen account kun je niet verwijderen --}}
@@ -93,7 +110,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('beheer.collegas.opslaan') }}">
+            <form method="POST" action="{{ route('beheer.collegas.opslaan') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-rij form-rij-2">
@@ -161,6 +178,15 @@
                         <textarea id="trainer_bio" name="trainer_bio" rows="3"
                             class="veld-input">{{ old('trainer_bio') }}</textarea>
                         @error('trainer_bio') <span class="veld-fout">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                <div class="form-rij">
+                    <div class="veld">
+                        <label for="profielfoto">Foto (optioneel, jpg/png/webp, max 2 MB)</label>
+                        <input type="file" id="profielfoto" name="profielfoto" accept="image/jpeg,image/png,image/webp"
+                            class="veld-input">
+                        @error('profielfoto') <span class="veld-fout">{{ $message }}</span> @enderror
                     </div>
                 </div>
 

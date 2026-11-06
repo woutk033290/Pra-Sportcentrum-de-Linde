@@ -25,8 +25,13 @@ class AccountController extends Controller
             'telefoonnummer' => ['nullable', 'string', 'max:255'],
             'geboortedatum' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:today'],
             'password' => ['required', 'string', 'min:8', 'max:72', 'confirmed'],
+            'profielfoto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'voorwaarden' => ['accepted'],
         ], [
+            'profielfoto.image' => 'De profielfoto moet een afbeelding zijn.',
+            'profielfoto.mimes' => 'De profielfoto moet een jpg, png of webp zijn.',
+            'profielfoto.max' => 'De profielfoto mag maximaal 2 MB groot zijn.',
+            'profielfoto.uploaded' => 'De profielfoto kon niet worden geüpload (maximaal 2 MB).',
             'required' => ':attribute is verplicht.',
             'string' => ':attribute moet tekst zijn.',
             'max' => ':attribute mag maximaal :max tekens bevatten.',
@@ -47,6 +52,9 @@ class AccountController extends Controller
             'voornaam' => $data['voornaam'],
             'achternaam' => $data['achternaam'],
             'email' => $data['email'],
+            'profielfoto_pad' => $request->hasFile('profielfoto')
+                ? $request->file('profielfoto')->store('profielfoto', 'public')
+                : null,
             'telefoonnummer' => $data['telefoonnummer'] ?? '',
             'geboortedatum' => $data['geboortedatum'] ?? null,
             'password' => Hash::make($data['password']),

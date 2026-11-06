@@ -16,8 +16,9 @@
 
             <a href="{{ url('/') }}" class="terug-knop">&larr; Terug</a>
 
+            @include('partials.account-tabs', ['actief' => 'login'])
+
             <h1 class="login-title">Inloggen</h1>
-            <a href="{{ route('registreren') }}" class="mb-5 inline-block text-blue-700 underline">Nieuw account maken</a>
 
             @if (session('succes'))
                 <div class="melding-succes">{{ session('succes') }}</div>
@@ -52,6 +53,11 @@
 
                 <button type="submit" class="login-button">Inloggen</button>
             </form>
+
+            <div class="account-cta">
+                <p>Nog geen account?</p>
+                <a href="{{ route('registreren') }}" class="btn btn-rand">Nieuw account maken</a>
+            </div>
 
         </div>
     </div>
