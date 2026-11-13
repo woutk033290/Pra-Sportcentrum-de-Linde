@@ -9,6 +9,7 @@ use App\Http\Controllers\LestypeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReserveringController;
 use App\Http\Controllers\RoosterController;
+use App\Http\Controllers\RoosterPdfController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Middleware\ControleerBeheerder;
 use App\Http\Middleware\RequireRole;
@@ -16,57 +17,97 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Lesinfo per lessoort (spinning, yoga, bootcamp, aquagym)
 Route::get('/lessen/{slug}', [LestypeController::class, 'tonen'])
     ->where('slug', '[a-z0-9-]+')
     ->name('lestype.tonen');
 
-// Rooster en lesdetails
+// Rooster
 Route::get('/rooster', [RoosterController::class, 'index'])->name('rooster');
-Route::get('/rooster/{groepsles}', [LesController::class, 'tonen'])->name('les.tonen');
-Route::post('/rooster/{groepsles}/aanmelden', [LesController::class, 'aanmelden'])->name('les.aanmelden');
-Route::post('/rooster/{groepsles}/annuleren', [LesController::class, 'annuleren'])->name('les.annuleren');
-Route::post('/rooster/{groepsles}/afmelden/{reservering}', [LesController::class, 'afmelden'])->name('les.afmelden');
 
-// Registreren (leden)
+// PDF-rooster
+// De controller controleert zelf of de gebruiker beheerder, trainer of lid is.
+Route::get('/rooster/pdf', [RoosterPdfController::class, 'formulier'])
+    ->name('rooster.pdf.formulier');
+
+Route::post('/rooster/pdf', [RoosterPdfController::class, 'downloaden'])
+    ->name('rooster.pdf.downloaden');
+
+// Lesdetails
+Route::get('/rooster/{groepsles}', [LesController::class, 'tonen'])->name('les.tonen');
+
+Route::post('/rooster/{groepsles}/aanmelden', [LesController::class, 'aanmelden'])
+    ->name('les.aanmelden');
+
+Route::post('/rooster/{groepsles}/annuleren', [LesController::class, 'annuleren'])
+    ->name('les.annuleren');
+
+Route::post('/rooster/{groepsles}/afmelden/{reservering}', [LesController::class, 'afmelden'])
+    ->name('les.afmelden');
+
+// Registreren
 Route::view('/registreren', 'auth.registreren')->name('registreren');
+
 Route::post('/registreren', [AccountController::class, 'register'])
     ->middleware('throttle:10,1')
     ->name('registreren.store');
 
-// Inloggen en uitloggen
+// Inloggen
 Route::get('/login', [LoginController::class, 'toon'])->name('login');
+
 Route::post('/login', [LoginController::class, 'verwerken'])
     ->middleware('throttle:5,1')
     ->name('login.verwerken');
-Route::post('/uitloggen', [LoginController::class, 'uitloggen'])->name('uitloggen');
 
-// Beheergedeelte: alleen bereikbaar als beheerder
+Route::post('/uitloggen', [LoginController::class, 'uitloggen'])
+    ->name('uitloggen');
+
+// Beheergedeelte
 Route::middleware(['auth:beheer', ControleerBeheerder::class])
     ->prefix('beheer')
     ->name('beheer.')
     ->group(function () {
-        Route::get('/', [BeheerDashboardController::class, 'index'])->name('dashboard');
-        Route::post('/collegas', [BeheerDashboardController::class, 'collegaOpslaan'])->name('collegas.opslaan');
-        Route::post('/collegas/{gebruiker}/foto', [BeheerDashboardController::class, 'collegaFoto'])->name('collegas.foto');
-        Route::delete('/collegas/{gebruiker}', [BeheerDashboardController::class, 'collegaVerwijderen'])->name('collegas.verwijderen');
+        Route::get('/', [BeheerDashboardController::class, 'index'])
+            ->name('dashboard');
 
-        Route::post('/uitloggen', [LoginController::class, 'uitloggen'])->name('uitloggen');
+        Route::post('/collegas', [BeheerDashboardController::class, 'collegaOpslaan'])
+            ->name('collegas.opslaan');
 
-        Route::get('/lessen', [BeheerLesController::class, 'index'])->name('lessen');
-        Route::post('/lessen', [BeheerLesController::class, 'opslaan'])->name('lessen.opslaan');
-        Route::get('/lessen/{groepsles}/bewerken', [BeheerLesController::class, 'bewerken'])->name('lessen.bewerken');
-        Route::put('/lessen/{groepsles}', [BeheerLesController::class, 'bijwerken'])->name('lessen.bijwerken');
-        Route::delete('/lessen/{groepsles}', [BeheerLesController::class, 'verwijderen'])->name('lessen.verwijderen');
+        Route::post('/collegas/{gebruiker}/foto', [BeheerDashboardController::class, 'collegaFoto'])
+            ->name('collegas.foto');
+
+        Route::delete('/collegas/{gebruiker}', [BeheerDashboardController::class, 'collegaVerwijderen'])
+            ->name('collegas.verwijderen');
+
+        Route::post('/uitloggen', [LoginController::class, 'uitloggen'])
+            ->name('uitloggen');
+
+        Route::get('/lessen', [BeheerLesController::class, 'index'])
+            ->name('lessen');
+
+        Route::post('/lessen', [BeheerLesController::class, 'opslaan'])
+            ->name('lessen.opslaan');
+
+        Route::get('/lessen/{groepsles}/bewerken', [BeheerLesController::class, 'bewerken'])
+            ->name('lessen.bewerken');
+
+        Route::put('/lessen/{groepsles}', [BeheerLesController::class, 'bijwerken'])
+            ->name('lessen.bijwerken');
+
+        Route::delete('/lessen/{groepsles}', [BeheerLesController::class, 'verwijderen'])
+            ->name('lessen.verwijderen');
     });
 
 // Trainergedeelte
-Route::middleware(['auth:web', RequireRole::class.':trainer'])->group(function () {
+Route::middleware(['auth:web', RequireRole::class . ':trainer'])->group(function () {
     Route::get('/trainer', [TrainerController::class, 'index'])
         ->name('trainer.dashboard');
 });
 
-Route::middleware(['auth:web', RequireRole::class.':lid'])->group(function () {
-    Route::get('/mijn-reserveringen', [ReserveringController::class, 'index'])->name('reserveringen.index');
-    Route::delete('/mijn-reserveringen/{reservering}', [ReserveringController::class, 'destroy'])->name('reserveringen.destroy');
+// Leden
+Route::middleware(['auth:web', RequireRole::class . ':lid'])->group(function () {
+    Route::get('/mijn-reserveringen', [ReserveringController::class, 'index'])
+        ->name('reserveringen.index');
+
+    Route::delete('/mijn-reserveringen/{reservering}', [ReserveringController::class, 'destroy'])
+        ->name('reserveringen.destroy');
 });

@@ -1135,3 +1135,25 @@ textarea.veld-input {
         order: -1;
     }
 }
+.rooster-onderkant {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.rooster-onderkant .rooster-hint {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .rooster-onderkant {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rooster-onderkant .btn {
+        text-align: center;
+    }
+}

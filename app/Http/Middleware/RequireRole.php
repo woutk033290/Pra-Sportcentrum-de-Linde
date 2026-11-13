@@ -8,9 +8,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RequireRole
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        abort_unless($request->user()?->rol === $role && $request->user()->geactiveerd_op && ! $request->user()->verwijderd_op, 403, 'Je hebt geen toegang tot deze pagina.');
+        $gebruiker = $request->user();
+
+        abort_unless(
+            $gebruiker
+            && in_array($gebruiker->rol, $roles, true)
+            && $gebruiker->geactiveerd_op
+            && ! $gebruiker->verwijderd_op,
+            403,
+            'Je hebt geen toegang tot deze pagina.'
+        );
 
         return $next($request);
     }
